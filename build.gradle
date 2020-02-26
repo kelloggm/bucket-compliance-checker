@@ -4,9 +4,8 @@ plugins {
 }
 
 repositories {
-    // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
 }
 
 configurations {
@@ -38,6 +37,9 @@ dependencies {
     // Testing
     testImplementation 'junit:junit:4.13'
     testCompile "org.checkerframework:framework-test:${versions.checkerFramework}"
+    testCompile 'software.amazon.awscdk:s3:1.25.0'
+    testCompile 'software.amazon.awscdk:core:1.25.0'
+    testCompile 'software.amazon.awscdk:ec2:1.25.0'
 
     errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 }
