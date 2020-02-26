@@ -1,5 +1,6 @@
 import org.checkerframework.common.value.qual.*;
 import org.checkerframework.checker.objectconstruction.qual.*;
+import org.checkerframework.checker.returnsrcvr.qual.*;
 
 package software.amazon.awscdk.services.s3;
 
@@ -29,13 +30,13 @@ class Bucket {
         //  - a method that specifies access control explicitly
         //  - versioned
         //  - encrypted
-        Object build(@CalledMethodsPredicate( "(blockPublicAccess || accessControl || publicReadAccess) && versioned && encrypted" ) Bucket.Builder this);
+        Object build(@CalledMethodsPredicate("(blockPublicAccess || accessControl || publicReadAccess) && versioned && encryption") Bucket.Builder this);
 
         // must set versioned to true!
         @This Builder versioned(@BoolVal(true) Boolean v);
 
         // must set encrypted to a scheme other than unencrpyted
-        @This Builder encrypted(@StringVal({"KMS", "KMS_MANAGED", "S3_MANAGED"}) BucketEncryption b);
+        @This Builder encryption(@StringVal({"KMS", "KMS_MANAGED", "S3_MANAGED"}) BucketEncryption b);
 
         // access control options:
 
@@ -43,7 +44,7 @@ class Bucket {
         @This Builder blockPublicAccess(BlockPublicAccess b);
 
         // don't call publicReadAccess with something that's not definitely false (or just don't call it at all?)
-        @This Builder publicReadAccess(@BoolVal("false") Boolean b);
+        @This Builder publicReadAccess(@BoolVal(false) Boolean b);
 
         // This set of permitted access control policies is *probably* too restrictive, but it's certainly sound
         @This Builder accessControl(@StringVal({"BUCKET_OWNER_FULL_CONTROL", "BUCKET_OWNER_READ", "PRIVATE"}) BucketAccessControl b);

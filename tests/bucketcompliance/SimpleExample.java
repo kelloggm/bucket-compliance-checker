@@ -21,12 +21,12 @@ class SimpleExample extends Stack {
 
         // make a bad bucket
 
-        // :: error: noncompliant.bucket
         Bucket bucket2 =
                 Bucket.Builder.create(this, "MyBucket")
                         //.versioned(true)
                         //.encryption(BucketEncryption.KMS_MANAGED)
                         //.accessControl(BucketAccessControl.PRIVATE)
+                        // :: error: method.invocation.invalid
                         .build();
     }
 }

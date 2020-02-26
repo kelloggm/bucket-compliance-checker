@@ -20,8 +20,7 @@ public class BucketComplianceTest extends CheckerFrameworkPerDirectoryTest {
                 "bucketcompliance",
                 "-Anomsgtext",
                 "-Astubs=stubs/",
-                "-AstubDebug");
-        System.out.println("running test");
+                "-nowarn");
     }
 
     @Parameters

@@ -1,21 +1,23 @@
 package org.checkerframework.checker.bucketcompliance;
 
 import org.checkerframework.checker.objectconstruction.ObjectConstructionChecker;
-import org.checkerframework.common.basetype.BaseTypeChecker;
+import org.checkerframework.com.google.common.collect.ImmutableList;
 import org.checkerframework.common.value.ValueChecker;
+import org.checkerframework.framework.source.AggregateChecker;
+import org.checkerframework.framework.source.SourceChecker;
 
-import java.util.LinkedHashSet;
+import java.util.Collection;
 
 /**
  * This is the entry point for pluggable type-checking.
  */
-public class BucketComplianceChecker extends BaseTypeChecker {
+public class BucketComplianceChecker extends AggregateChecker {
+    /**
+     * Returns the list of supported checkers to be run together. Subclasses need to override this
+     * method.
+     */
     @Override
-    protected LinkedHashSet<Class<? extends BaseTypeChecker>> getImmediateSubcheckerClasses() {
-        LinkedHashSet<Class<? extends BaseTypeChecker>> checkers =
-                super.getImmediateSubcheckerClasses();
-        checkers.add(ObjectConstructionChecker.class);
-        checkers.add(ValueChecker.class);
-        return checkers;
+    protected Collection<Class<? extends SourceChecker>> getSupportedCheckers() {
+        return ImmutableList.of(ObjectConstructionChecker.class, ValueChecker.class);
     }
 }
