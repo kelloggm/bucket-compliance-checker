@@ -30,13 +30,13 @@ dependencies {
     }
     else {
         implementation "org.checkerframework:checker:${versions.checkerFramework}"
-        implementation "net.sridharan.objectconstruction:object-construction-checker:0.1.7"
     }
 
-    compileOnly "com.google.errorprone:javac:9+181-r4173-1"
+    implementation "net.sridharan.objectconstruction:object-construction-checker:0.1.7"
+
+    //compileOnly "com.google.errorprone:javac:9+181-r4173-1"
 
     // Testing
-    testImplementation 'junit:junit:4.13'
     testCompile "org.checkerframework:framework-test:${versions.checkerFramework}"
     testCompile 'software.amazon.awscdk:s3:1.25.0'
     testCompile 'software.amazon.awscdk:core:1.25.0'

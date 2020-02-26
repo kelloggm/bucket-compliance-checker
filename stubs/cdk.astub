@@ -1,0 +1,65 @@
+import org.checkerframework.common.value.qual.*;
+import org.checkerframework.checker.objectconstruction.qual.*;
+
+package software.amazon.awscdk.services.s3;
+
+enum BucketEncryption {
+    @StringVal("KMS") KMS,
+    @StringVal("KMS_MANAGED") KMS_MANAGED,
+    @StringVal("S3_MANAGED") S3_MANAGED,
+    @StringVal("UNENCRYPTED") UNENCRYPTED
+}
+
+enum BucketAccessControl {
+    @StringVal("AUTHENTICATED_READ") AUTHENTICATED_READ,
+    @StringVal("AWS_EXEC_READ") AWS_EXEC_READ,
+    @StringVal("BUCKET_OWNER_FULL_CONTROL") BUCKET_OWNER_FULL_CONTROL,
+    @StringVal("BUCKET_OWNER_READ") BUCKET_OWNER_READ,
+    @StringVal("LOG_DELIVERY_WRITE") LOG_DELIVERY_WRITE,
+    @StringVal("PRIVATE") PRIVATE,
+    @StringVal("PUBLIC_READ") PUBLIC_READ,
+    @StringVal("PUBLIC_READ_WRITE") PUBLIC_READ_WRITE
+}
+
+class Bucket {
+    class Builder {
+        // exciting specs
+
+        // must call:
+        //  - a method that specifies access control explicitly
+        //  - versioned
+        //  - encrypted
+        Object build(@CalledMethodsPredicate( "(blockPublicAccess || accessControl || publicReadAccess) && versioned && encrypted" ) Bucket.Builder this);
+
+        // must set versioned to true!
+        @This Builder versioned(@BoolVal(true) Boolean v);
+
+        // must set encrypted to a scheme other than unencrpyted
+        @This Builder encrypted(@StringVal({"KMS", "KMS_MANAGED", "S3_MANAGED"}) BucketEncryption b);
+
+        // access control options:
+
+        // any argument to blockPublicAccess() is fine
+        @This Builder blockPublicAccess(BlockPublicAccess b);
+
+        // don't call publicReadAccess with something that's not definitely false (or just don't call it at all?)
+        @This Builder publicReadAccess(@BoolVal("false") Boolean b);
+
+        // This set of permitted access control policies is *probably* too restrictive, but it's certainly sound
+        @This Builder accessControl(@StringVal({"BUCKET_OWNER_FULL_CONTROL", "BUCKET_OWNER_READ", "PRIVATE"}) BucketAccessControl b);
+
+        // @This annotations on all other setters
+        @This Builder bucketName(String b);
+        @This Builder cors(java.util.List<CorsRule> cors);
+        @This Builder encryptionKey(IKey encryptionKey);
+        @This Builder lifecycleRules(java.util.List<LifecycleRule> lifecycleRules);
+        @This Builder metrics(java.util.List<BucketMetrics> metrics);
+        @This Builder removalPolicy(RemovalPolicy removalPolicy);
+        @This Builder serverAccessLogsBucket(IBucket serverAccessLogsBucket);
+        @This Builder serverAccessLogsPrefix(java.lang.String serverAccessLogsPrefix);
+        @This Builder websiteErrorDocument(java.lang.String websiteErrorDocument);
+        @This Builder websiteIndexDocument(java.lang.String websiteIndexDocument);
+        @This Builder websiteRedirect(RedirectTarget websiteRedirect);
+        @This Builder websiteRoutingRules(java.util.List<RoutingRule> websiteRoutingRules);
+    }
+}
