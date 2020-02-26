@@ -30,6 +30,7 @@ dependencies {
     }
     else {
         implementation "org.checkerframework:checker:${versions.checkerFramework}"
+        implementation "net.sridharan.objectconstruction:object-construction-checker:0.1.7"
     }
 
     compileOnly "com.google.errorprone:javac:9+181-r4173-1"
@@ -64,6 +65,7 @@ publishing {
 
 test {
     inputs.files("tests/bucketcompliance")
+    inputs.files("src/main/java/org/checkerframework/checker/bucketcompliance")
     if (!JavaVersion.current().java9Compatible) {
         jvmArgs "-Xbootclasspath/p:${configurations.errorproneJavac.asPath}"
     }
