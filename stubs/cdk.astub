@@ -23,8 +23,15 @@ enum BucketAccessControl {
 }
 
 class Bucket {
+
+    // TODO: handle grants. Right now, we assume that if you grant access explicitly, you're doing it
+    // in a reasonable way, because we don't yet reason about what a grant covers
+    //
+    // Possible stopgap: warn about all grants (lots of FPs for sure if we do...)
+
     class Builder {
-        // exciting specs
+        // exciting specs. Unfortunately, these have to be a copy of the above. If you change one set of specs,
+        // you MUST change the other.
 
         // must call:
         //  - a method that specifies access control explicitly
@@ -62,5 +69,49 @@ class Bucket {
         @This Builder websiteIndexDocument(java.lang.String websiteIndexDocument);
         @This Builder websiteRedirect(RedirectTarget websiteRedirect);
         @This Builder websiteRoutingRules(java.util.List<RoutingRule> websiteRoutingRules);
+    }
+}
+
+class BucketProps {
+    class Builder {
+            // exciting specs. Unfortunately, these have to be a copy of the above. If you change one set of specs,
+            // you MUST change the other.
+
+            // must call:
+            //  - a method that specifies access control explicitly
+            //  - versioned
+            //  - encrypted
+            Object build(@CalledMethodsPredicate("(blockPublicAccess || accessControl || publicReadAccess) && versioned && encryption") Bucket.Builder this);
+
+            // must set versioned to true!
+            @This Builder versioned(@BoolVal(true) Boolean v);
+
+            // must set encrypted to a scheme other than unencrpyted
+            @This Builder encryption(@StringVal({"KMS", "KMS_MANAGED", "S3_MANAGED"}) BucketEncryption b);
+
+            // access control options:
+
+            // any argument to blockPublicAccess() is fine
+            @This Builder blockPublicAccess(BlockPublicAccess b);
+
+            // don't call publicReadAccess with something that's not definitely false (or just don't call it at all?)
+            @This Builder publicReadAccess(@BoolVal(false) Boolean b);
+
+            // This set of permitted access control policies is *probably* too restrictive, but it's certainly sound
+            @This Builder accessControl(@StringVal({"BUCKET_OWNER_FULL_CONTROL", "BUCKET_OWNER_READ", "PRIVATE"}) BucketAccessControl b);
+
+            // @This annotations on all other setters
+            @This Builder bucketName(String b);
+            @This Builder cors(java.util.List<CorsRule> cors);
+            @This Builder encryptionKey(IKey encryptionKey);
+            @This Builder lifecycleRules(java.util.List<LifecycleRule> lifecycleRules);
+            @This Builder metrics(java.util.List<BucketMetrics> metrics);
+            @This Builder removalPolicy(RemovalPolicy removalPolicy);
+            @This Builder serverAccessLogsBucket(IBucket serverAccessLogsBucket);
+            @This Builder serverAccessLogsPrefix(java.lang.String serverAccessLogsPrefix);
+            @This Builder websiteErrorDocument(java.lang.String websiteErrorDocument);
+            @This Builder websiteIndexDocument(java.lang.String websiteIndexDocument);
+            @This Builder websiteRedirect(RedirectTarget websiteRedirect);
+            @This Builder websiteRoutingRules(java.util.List<RoutingRule> websiteRoutingRules);
     }
 }
