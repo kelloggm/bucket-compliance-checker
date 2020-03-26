@@ -4,10 +4,25 @@ This checker enforces the rules for HIPAA compliance listed by this page:
 https://www.dashsdk.com/docs/aws/hipaa/amazon-s3/ when creating Amazon Web Servies
 S3 buckets using the [AWS CDK](https://aws.amazon.com/cdk/) for Java.
 
-In particular, it enforces:
-* new buckets use best practices that ensure they are not and cannot become world-readable
-* new buckets are encrypted
-* new buckets are versioned, so that data will not be lost if overwritten
+In particular, it enforces that:
+* new buckets use best practices that ensure they are not and cannot become world-readable,
+* new buckets are encrypted, and
+* new buckets are versioned, so that data will not be lost if overwritten.
+
+These rules are specified in stub files in the `stubs` folder.
+
+The checker conservatively over-approximates the run-time behavior of
+the program being checked. If it does not issue an error, then the program
+never configures a bucket without following the rules above. It may
+issue false positive warnings, however.
+
+This checker combines annotations from two other checkers: the
+[Constant Value
+Checker](https://checkerframework.org/manual/#constant-value-checker)
+of the Checker Framework and the [Object Construction
+Checker](https://github.com/kelloggm/object-construction-checker). Refer
+to the documentation of those checkers for the meanings of annotations
+and error messages.
 
 ## How to run the checker
 
@@ -38,8 +53,14 @@ At compile time, the Bucket ComplianceChecker estimates what values the program
 may compute at run time.  It issues a warning if the program may create a non-compliant bucket.
 It works via a technique called pluggable typechecking.
 
-You may need to specify the contracts of methods and fields in your code --
-that is, their requirements and their guarantees.
+You may need to specify the contracts of methods and fields in your
+code -- that is, their requirements and their guarantees. You can
+specify your code using annotations from the two checkers on which
+this checker is built: the [Constant Value
+Checker](https://checkerframework.org/manual/#constant-value-checker)
+of the Checker Framework and the [Object Construction
+Checker](https://github.com/kelloggm/object-construction-checker). Refer
+to the documentation of those checkers for the meaning of annotations.
 
 ## How to build the checker
 
